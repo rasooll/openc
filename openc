@@ -1,0 +1,59 @@
+#!/bin/bash
+## Scipt name : OpenC
+## Rasool.SF
+## My E-Mail : safari@rasool.id.ir
+## Version: 1.0-04.05.2016
+clear
+username="Your-username"
+password="Your-password"
+pidfile="/tmp/openconnect-pid"
+if [ -f "$pidfile" ];then
+	echo "OpenC Status : Active"
+	read -p "Mikhay OpenC ro Disconnect konam ? (Y/N)" disconnect
+	case "$disconnect" in
+		"Y")
+			sudo killall openconnect
+			sudo rm $pidfile
+			zenity  --notification  --text "OpenC disconnected"
+			sleep 2
+		;;
+		"N")
+			exit
+		;;
+		*)
+			zenity  --notification  --text "Fail"
+			echo "Fail"
+			sleep 2
+	esac
+else
+	echo "OpenC Status : Inactive"
+	echo "Auto connection after 2 sec."
+	sleep 2
+	echo "Keshvar mored nazar ra entekhab konid:"
+	read -p "us - uk - nl ===> " srv
+	case "$srv" in
+	   "us")
+		server=Addres-server-US
+	   ;;
+	   "uk")
+		server=Addres-server-uk
+	   ;;
+	   "nl")
+		server=Addres-server-NL
+	   ;;
+	   *)
+		clear
+		echo "Keshvar Motabar Nist !"
+		exit
+	esac
+	echo "$password" | sudo openconnect -b --pid-file=$pidfile --no-cert-check --user="$username" $server
+	sleep 2
+	zenity  --notification  --text "Connected to $srv server!"
+	exit
+fi
+
+
+
+
+
+
